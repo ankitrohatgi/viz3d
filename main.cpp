@@ -1,3 +1,5 @@
+#include "glutils.h"
+
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
@@ -7,13 +9,6 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-
-
-static void glfw_error_callback(int error, const char* description)
-{
-    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
-}
-
 
 class App {
 private:
@@ -27,7 +22,7 @@ private:
 
     void setupWindow() {
         // create window
-        glfwSetErrorCallback(glfw_error_callback);
+        glfwSetErrorCallback(viz3d::glfw_error_callback);
         if (!glfwInit()) {
             std::cerr << "glfw init error!" << std::endl;
             return;
@@ -183,7 +178,7 @@ public:
 };
 
 int main() {
-    std::cout << "imgui + opengl3" << std::endl;
+    std::cout << "viz3d" << std::endl;
     App app;
     app.run();
     return 0;
