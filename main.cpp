@@ -1,4 +1,5 @@
 #include "glutils.h"
+#include "ui.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
@@ -19,6 +20,7 @@ private:
 
     // application state
     bool showDemoWindow_ = true;
+    viz3d::UIState uiState_;
 
     void setupWindow() {
         // create window
@@ -72,7 +74,10 @@ private:
         float vertices[] = {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f
+            0.0f, 0.5f, 0.0f,
+            -0.8f, -0.8f, 0.0f,
+            0.8f, -0.8f, 0.0f,
+            0.0f, 0.8f, 0.0f
         };
 
         GLuint vao;
@@ -89,18 +94,7 @@ private:
                     #version 330 core 
                     layout (location = 0) in vec3 aPos;
                     void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); })";
-        GLuint vertexShader;
-        vertexShader = glCreateShader(GL_VERTEX_SHADER);
-        glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-        glCompileShader(vertexShader);
-        int success;
-        char infoLog[512];
-        glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-        if (!success) {
-            glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-            std::cout << "error: " << infoLog << std::endl;
-        }
-
+        
         // fragment shader
         const char *fragmentShaderSource = R"(
                     #version 330 core
@@ -111,31 +105,17 @@ private:
                     }       
         )";
 
-        GLuint fragmentShader;
-        fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-        glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-        glCompileShader(fragmentShader);
-
-        // program
-        GLuint shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
-        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-        if(!success) {
-            glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-            std::cerr << "error: " << infoLog << std::endl;
-        }
+        GLuint shaderProgram = viz3d::LoadShaders(vertexShaderSource, fragmentShaderSource);
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);  
         glUseProgram(shaderProgram);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
     }
 
     void renderGL() {
         glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_LINE_LOOP, 3, 3);
     }
 
 public:
@@ -158,6 +138,8 @@ public:
             if (showDemoWindow_) {
                 ImGui::ShowDemoWindow(&showDemoWindow_);
             }
+
+            viz3d::RenderUI(&uiState_);
 
             // render imgui
             ImGui::Render();

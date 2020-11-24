@@ -15,9 +15,11 @@ set(GL3W_SRC thirdparty/gl3w/GL/gl3w.c)
 
 set(viz3d_srcs main.cpp
               app.cpp
-              glutils.cpp)
+              glutils.cpp
+              ui.cpp)
 set(viz3d_hdrs app.h
-               glutils.h)
+               glutils.h
+               ui.h)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # MacOS
     find_package(OpenGL REQUIRED)
