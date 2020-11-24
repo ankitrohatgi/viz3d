@@ -135,10 +135,6 @@ public:
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();
             
-            if (showDemoWindow_) {
-                ImGui::ShowDemoWindow(&showDemoWindow_);
-            }
-
             viz3d::RenderUI(&uiState_);
 
             // render imgui

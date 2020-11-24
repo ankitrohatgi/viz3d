@@ -2,6 +2,8 @@
 
 #include <imgui.h>
 
+#include <cstdlib>
+
 namespace viz3d {
 
 namespace {
@@ -12,7 +14,7 @@ void RenderAboutDialog(bool *open) {
         return;
     }
 
-    ImGui::Text("Viz3d 0.0 - Simple 3D visualizer");
+    ImGui::Text("viz3d 0.0 - Simple 3D visualizer");
     ImGui::Separator();
     ImGui::Text("Author: Ankit Rohatgi");
     ImGui::End();
@@ -24,12 +26,18 @@ void RenderMenuBar(UIState *uiState) {
             if (ImGui::MenuItem("Open", "CTRL+O")) {
                 // open a file
             }
+            if (ImGui::MenuItem("Exit", "CTRL+Q")) {
+                exit(0);
+            }
             ImGui::EndMenu();
         }
         if (ImGui::BeginMenu("Help")) {
             if (ImGui::MenuItem("About")) {
                 // show about dialog
                 uiState->showAbout_ = true;
+            }
+            if (ImGui::MenuItem("Show ImGui Demo")) {
+                uiState->showImGuiDemo_ = true;
             }
             ImGui::EndMenu();
         }
@@ -41,7 +49,8 @@ void RenderMenuBar(UIState *uiState) {
 
 void RenderUI(UIState *uiState) {
     RenderMenuBar(uiState);
-    if (uiState->showAbout_) RenderAboutDialog(&(uiState->showAbout_));
+    if (uiState->showAbout_) RenderAboutDialog(&(uiState->showAbout_)); 
+    if (uiState->showImGuiDemo_) ImGui::ShowDemoWindow(&(uiState->showImGuiDemo_));
 }
 
 }

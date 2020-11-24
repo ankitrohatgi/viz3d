@@ -6,6 +6,7 @@ namespace viz3d {
 // should this just come from some data model of the app??
 struct UIState {
     bool showAbout_ = false;
+    bool showImGuiDemo_ = false;
 };
 
 void RenderUI(UIState *uiState);
