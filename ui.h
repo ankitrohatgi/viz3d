@@ -2,13 +2,13 @@
 
 namespace viz3d {
 
-// store UI state here, or is this just application state??
-// should this just come from some data model of the app??
+// Store UI specific states like window open/close etc.
 struct UIState {
     bool showAbout_ = false;
     bool showImGuiDemo_ = false;
 };
 
+// may need to pass in a data model etc. at some point
 void RenderUI(UIState *uiState);
 
 }
