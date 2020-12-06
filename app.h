@@ -1,7 +1,11 @@
 #pragma once
+#include <GL/gl3w.h>
 #include <GLFW/glfw3.h>
+#include "ui.h"
+#include "renderer.h"
 
 namespace viz3d {
+
 
 class App {
 private:
@@ -9,11 +13,12 @@ private:
     static constexpr size_t WindowWidth = 800;
     
     GLFWwindow *window_ = nullptr;
-    bool showDemoWindow_ = true;
+
+    viz3d::UIState uiState_;
+    viz3d::Renderer renderer_;
 
     void setupWindow();
     void setupUI();
-    void setupGL();
 
 public:
     App();
