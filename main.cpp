@@ -1,9 +1,11 @@
 #include "glutils.h"
 #include "ui.h"
+#include "renderer.h"
 
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+
 
 #include <GL/gl3w.h>
 
@@ -19,15 +21,8 @@ private:
 
     GLFWwindow *window_ = nullptr;
 
-    // application state
-    bool showDemoWindow_ = true;
     viz3d::UIState uiState_;
-
-    std::vector<float> cloudVertices_;
-    GLuint vao1_;
-    GLuint vao2_;
-    GLint colorUniformLoc_;
-
+    viz3d::Renderer renderer_;
 
     void setupWindow() {
         // create window
@@ -77,91 +72,14 @@ private:
         #endif
     }
 
-    void setupGL() {
-        float vertices[] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f, 0.5f, 0.0f,
-            -0.8f, -0.8f, 0.0f,
-            0.8f, -0.8f, 0.0f,
-            0.0f, 0.8f, 0.0f
-        };
-
-        // fill cloud vertices
-        for (float x = -0.5f; x <= 0.5f; x+= +0.01f) {
-            for (float y = -0.5f; y <= 0.5f; y+=0.01f) {
-                cloudVertices_.push_back(x);
-                cloudVertices_.push_back(y);
-                cloudVertices_.push_back(0.0f);
-            }
-        }
-
-        glGenVertexArrays(1, &vao1_);
-        glBindVertexArray(vao1_);
-
-        GLuint vbo;
-        glGenBuffers(1, &vbo);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);  
-
-        // vertex shader
-        const char *vertexShaderSource = R"(
-                    #version 330 core 
-                    layout (location = 0) in vec3 aPos;
-                    void main() { gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0); })";
-        
-        // fragment shader
-        const char *fragmentShaderSource = R"(
-                    #version 330 core
-                    out vec4 FragColor;
-                    
-                    uniform vec4 uColor;
-
-                    void main()
-                    {
-                        FragColor = uColor;
-                    }       
-        )";
-
-        // cloud
-        glGenVertexArrays(1, &vao2_);
-        glBindVertexArray(vao2_);
-        GLuint vbo2;
-        glGenBuffers(1, &vbo2);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo2);
-        glBufferData(GL_ARRAY_BUFFER, cloudVertices_.size()*sizeof(float), cloudVertices_.data(), GL_STATIC_DRAW);
-
-        GLuint shaderProgram = viz3d::LoadShaders(vertexShaderSource, fragmentShaderSource);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);  
-        glUseProgram(shaderProgram);
-        
-        colorUniformLoc_ = glGetUniformLocation(shaderProgram, "uColor");
-
-    }
-
-    void renderGL() {
-        glBindVertexArray(vao1_);
-        glUniform4f(colorUniformLoc_, 1.0f, 0.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glDrawArrays(GL_LINE_LOOP, 3, 3);
-        glBindVertexArray(vao2_);
-        glUniform4f(colorUniformLoc_, 1.0f, 1.0f, 0.0f, 1.0f);
-        glDrawArrays(GL_POINTS, 0, cloudVertices_.size());
-
-    }
 
 public:
     App() {
         setupWindow();
         setupImgui();
-        setupGL();
+        renderer_.init();
     }
 
-   
     void run() {
         while (!glfwWindowShouldClose(window_)) {
             glfwPollEvents();
@@ -182,7 +100,7 @@ public:
             glClear(GL_COLOR_BUFFER_BIT);
 
             // render GL
-            renderGL();
+            renderer_.render();
 
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
             glfwSwapBuffers(window_);
