@@ -6,7 +6,6 @@
 
 namespace viz3d {
 
-
 class App {
 private:
     static constexpr size_t WindowHeight = 600;
@@ -19,7 +18,8 @@ private:
 
     void setupWindow();
     void setupUI();
-
+    static void HandleMouseButton(GLFWwindow* window, int button, int action, int mods);
+    static void HandleCursorPos(GLFWwindow* window, double xpos, double ypos);
 public:
     App();
     ~App();

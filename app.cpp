@@ -51,6 +51,10 @@ void App::setupWindow() {
         std::cerr << "Failed to init OpenGL loader" << std::endl;
         return;
     }
+
+    // attach event handlers
+    glfwSetMouseButtonCallback(window_, App::HandleMouseButton);
+    glfwSetCursorPosCallback(window_, App::HandleCursorPos);
 }
 
 void App::setupUI() {
@@ -92,6 +96,14 @@ void App::run() {
         glfwSwapBuffers(window_);
 
     }
+}
+
+void App::HandleMouseButton(GLFWwindow *window, int button, int action, int mods) {
+    std::cout << "button: " << button << ", action: " << action << std::endl;
+}
+
+void App::HandleCursorPos(GLFWwindow *window, double xpos, double ypos) {
+    std::cout << "\tx: " << xpos << ", y: " << ypos << std::endl;
 }
 
 }
