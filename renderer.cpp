@@ -60,6 +60,7 @@ namespace viz3d {
         glBindVertexArray(vao1_);
         glUniform4f(colorUniformLoc_, 1.0f, 0.0f, 0.0f, 1.0f);
         glm::mat4 mvp(1.0f);
+        mvp = glm::rotate(mvp, 0.523f, glm::vec3(0.0f, 0.0f, 1.0f));
         glUniformMatrix4fv(mvpUniformLoc_, 1, GL_FALSE, glm::value_ptr(mvp));
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawArrays(GL_LINE_LOOP, 3, 3);
