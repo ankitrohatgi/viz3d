@@ -99,11 +99,11 @@ void App::run() {
 }
 
 void App::HandleMouseButton(GLFWwindow *window, int button, int action, int mods) {
-    std::cout << "button: " << button << ", action: " << action << std::endl;
+    // std::cout << "button: " << button << ", action: " << action << std::endl;
 }
 
 void App::HandleCursorPos(GLFWwindow *window, double xpos, double ypos) {
-    std::cout << "\tx: " << xpos << ", y: " << ypos << std::endl;
+    // std::cout << "\tx: " << xpos << ", y: " << ypos << std::endl;
 }
 
 }

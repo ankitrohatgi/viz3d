@@ -21,7 +21,7 @@ private:
     static void HandleMouseButton(GLFWwindow* window, int button, int action, int mods);
     static void HandleCursorPos(GLFWwindow* window, double xpos, double ypos);
 public:
-    App();
+    App(); // TODO: parse command line params?
     ~App();
     // run event loop etc.
     void run();

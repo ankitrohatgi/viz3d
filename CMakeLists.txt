@@ -36,6 +36,8 @@ else(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # Ubuntu linux
     pkg_search_module(GLFW REQUIRED glfw3)
     set(OpenGL_GL_PREFERENCE "GLVND")
     find_package(OpenGL REQUIRED)
+    set(GLM_DIR thirdparty/glm/cmake/glm)
+    find_package(glm REQUIRED)
     add_executable(viz3d ${viz3d_srcs} ${viz3d_hdrs} ${GL3W_SRC} ${IMGUI_SRC})
     target_link_libraries(viz3d ${OpenGL_LIBRARIES} GL GLU dl glfw)
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") # end if

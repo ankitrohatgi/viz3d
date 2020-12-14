@@ -11,6 +11,7 @@ namespace viz3d {
         GLuint vao1_;
         GLuint vao2_;
         GLint colorUniformLoc_;
+        GLint mvpUniformLoc_;
 
     public:
         void init();

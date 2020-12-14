@@ -2,6 +2,9 @@
 #include "glutils.h"
 #include "shaders.h"
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 namespace viz3d {
 
     void Renderer::init() {
@@ -17,9 +20,11 @@ namespace viz3d {
         // fill cloud vertices
         for (float x = -0.5f; x <= 0.5f; x+= +0.01f) {
             for (float y = -0.5f; y <= 0.5f; y+=0.01f) {
-                cloudVertices_.push_back(x);
-                cloudVertices_.push_back(y);
-                cloudVertices_.push_back(0.0f);
+                for (float z = -0.5f; z <= 0.5f ; z+= 0.01f) {
+                    cloudVertices_.push_back(x);
+                    cloudVertices_.push_back(y);
+                    cloudVertices_.push_back(z);
+                }
             }
         }
 
@@ -48,11 +53,14 @@ namespace viz3d {
         glUseProgram(shaderProgram);
 
         colorUniformLoc_ = glGetUniformLocation(shaderProgram, "uColor");
+        mvpUniformLoc_ = glGetUniformLocation(shaderProgram, "MVP");
     }
 
     void Renderer::render() {
         glBindVertexArray(vao1_);
         glUniform4f(colorUniformLoc_, 1.0f, 0.0f, 0.0f, 1.0f);
+        glm::mat4 mvp(1.0f);
+        glUniformMatrix4fv(mvpUniformLoc_, 1, GL_FALSE, glm::value_ptr(mvp));
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawArrays(GL_LINE_LOOP, 3, 3);
         glBindVertexArray(vao2_);
